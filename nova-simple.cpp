@@ -26,7 +26,7 @@ bool hasChanged(const std::string& filename, const std::string& executable) {
     }
 }
 
-void build(string source, vector<string> flags, vector<string> libs, string output, bool stripped = false) {
+void build(string source, vector<string> flags, vector<string> libs, string output) {
     // Construct the compile command
     if (not hasChanged(source, output)) {
         std::cout << "executable is up to date, not building: " << output << std::endl;
@@ -53,12 +53,7 @@ void build(string source, vector<string> flags, vector<string> libs, string outp
 
     // Check if the compilation was successful
     if (result == 0) {
-        if(stripped){
-            string strip = "strip " + output;
-            system(strip.c_str());
-        }
         cout << "Build successful. Executable created: " << output << endl;
-
         if(output == "nova"){
             std::cout << "rerun nova" << std::endl;
             exit(0);
@@ -69,11 +64,8 @@ void build(string source, vector<string> flags, vector<string> libs, string outp
 }
 
 int main() {
-    //build(source, CompilationFlags, Libraries, OutputFile);
-
     // Nova(the compiler)'s build process
-    build("nova.cpp", {"Os","static"}, {}, "nova", true);
-
-    build("main.cpp", {"Os"}, {"ncurses","curl"}, "main", true);
+    build("nova-simple.cpp", {"Os", "static"}, {}, "bstrap");
+    build("nova.cpp", {"Os","static"}, {}, "nova");
     return 0;
 }
